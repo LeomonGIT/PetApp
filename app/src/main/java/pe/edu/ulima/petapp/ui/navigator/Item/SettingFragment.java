@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import pe.edu.ulima.petapp.R;
 
 public class SettingFragment extends Fragment {
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

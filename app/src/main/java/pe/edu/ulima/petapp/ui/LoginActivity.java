@@ -18,10 +18,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void clickLogin(View v){
-        Log.e("clickLogin","clickeado");
+        Log.e("clickLogin", "clickeado");
 
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
 
+    }
+
+    public void clickRegisterAccount(View v){
+        Log.e("clickLogin","clickeado");
+
+        Intent i = new Intent(this, RegisterAccountActivity.class);
+        startActivity(i);
     }
 }
