@@ -94,6 +94,11 @@
     <orderEntry type="library" exported="" name="design-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Parse-1.9.0" level="project" />
+    <orderEntry type="library" exported="" name="1_Parse-1.9.0" level="project" />
+    <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
+    <orderEntry type="library" exported="" name="1_bolts-android-1.1.4" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-6.1.0" level="project" />
   </component>
 </module>
