@@ -19,6 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.UserController;
+import pe.edu.ulima.petapp.dao.User;
 import pe.edu.ulima.petapp.ui.navigator.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -125,6 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
+                    Log.e("userParse","name:"+user.get("name").toString()+" email:"+user.getUsername().toString()+ " iD:"+user.getObjectId().toString());
+                    UserController.getInstance().setUser(new User(user.get("name").toString(),
+                            user.getUsername().toString(),user.getObjectId().toString()));
                     progressDialog.dismiss();
                 } else {
                     onLoginFailed();
