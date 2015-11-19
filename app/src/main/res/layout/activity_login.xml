@@ -62,7 +62,7 @@
             android:layout_marginBottom="24dp"
             android:text="Sin cuenta aún? Create una aquí"
             android:gravity="center"
-            android:onClick="clickRegisterAccount"
+            android:onClick="clickToRegisterAccount"
             android:textSize="16dip"/>
 
     </LinearLayout>

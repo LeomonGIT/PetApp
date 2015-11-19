@@ -70,6 +70,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
+                android:onClick="clickRegisterAccount"
                 android:text="Crear Cuenta"/>
 
             <TextView android:id="@+id/link_login"
@@ -78,6 +79,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="Ya eres un miembro? Login"
                 android:gravity="center"
+                android:onClick="clickToLogin"
                 android:textSize="16dip"/>
 
         </LinearLayout>

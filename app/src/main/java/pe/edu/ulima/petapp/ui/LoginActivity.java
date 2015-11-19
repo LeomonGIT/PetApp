@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         login();
     }
 
-    public void clickRegisterAccount(View v) {
+    public void clickToRegisterAccount(View v) {
         Intent i = new Intent(this, RegisterAccountActivity.class);
         startActivityForResult(i, REQUEST_SIGNUP);
     }
@@ -83,10 +83,6 @@ public class LoginActivity extends AppCompatActivity {
             moveTaskToBack(true);
         }
 
-        public void onLoginSuccess() {
-            _loginButton.setEnabled(true);
-            finish();
-        }
 
         public void onLoginFailed() {
             Toast.makeText(getBaseContext(), "Login incorrecto", Toast.LENGTH_LONG).show();
