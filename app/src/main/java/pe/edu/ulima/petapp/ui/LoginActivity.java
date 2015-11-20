@@ -53,6 +53,11 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void login() {
         Log.d(TAG, "Login");
+        progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Verificando...");
+        progressDialog.show();
 
         if (!validate()) {
             onLoginFailed();
@@ -61,11 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Verificando...");
-        progressDialog.show();
 
         validateParse();
 

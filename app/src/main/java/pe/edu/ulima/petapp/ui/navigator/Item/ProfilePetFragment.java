@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import pe.edu.ulima.petapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ProfilePetFragment extends Fragment {
 
 

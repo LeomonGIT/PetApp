@@ -67,6 +67,25 @@
                     android:hint="Edad"/>
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <Button android:id="@+id/btn_pet_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:hint="Seleccionar Imagen"/>
+            </android.support.design.widget.TextInputLayout>
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imgView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitXY"
+                android:layout_weight="1" >
+            </ImageView>
             <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_pet_register"
