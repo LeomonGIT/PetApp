@@ -148,7 +148,7 @@ public class AddPetFragment extends Fragment {
         pet.put("petName", name);
         pet.put("petType", type);
         pet.put("petAge", age);
-        pet.put("user", ParseObject.createWithoutData("_User", UserController.getInstance().toString()));
+        pet.put("user", ParseObject.createWithoutData("_User", UserController.getInstance().getUser().getUserCode().toString()));
         if (conFoto) {
             Log.e("registrando", "confoto=true");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -220,10 +220,10 @@ public class AddPetFragment extends Fragment {
                 Log.e("bitmap",bitMap.toString());
                 conFoto=true;
             } else {
-                Toast.makeText(getActivity(), "You haven't picked Image",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Imagen no seleccionada",Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG)
+            Toast.makeText(getActivity(), "Algo ocurrio mal", Toast.LENGTH_LONG)
                     .show();
         }
     }

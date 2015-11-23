@@ -5,9 +5,7 @@ import java.util.List;
 
 import pe.edu.ulima.petapp.dao.Pet;
 
-/**
- * Created by Leonardo on 21/11/2015.
- */
+
 public class PetController {
 
     private static PetController instance;

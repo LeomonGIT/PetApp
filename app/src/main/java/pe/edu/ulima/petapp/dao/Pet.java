@@ -4,9 +4,7 @@ import com.parse.ParseFile;
 
 import java.io.File;
 
-/**
- * Created by Leonardo on 21/11/2015.
- */
+
 public class Pet {
 
     private boolean gender;
@@ -78,15 +76,5 @@ public class Pet {
         return petImage;
     }
 
-    public void setPetImage(ParseFile petImage) {
-        this.petImage = petImage;
-    }
 
-
-    public Pet(boolean gender, String petName, String petAge, ParseFile petImage) {
-        this.gender = gender;
-        this.petName = petName;
-        this.petAge = petAge;
-        this.petImage = petImage;
-    }
 }

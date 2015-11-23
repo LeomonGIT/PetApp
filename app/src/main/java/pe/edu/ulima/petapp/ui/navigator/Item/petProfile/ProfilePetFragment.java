@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,18 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.controller.PetController;
+import pe.edu.ulima.petapp.controller.UserController;
 import pe.edu.ulima.petapp.dao.Pet;
 
 public class ProfilePetFragment extends Fragment {
@@ -60,23 +69,29 @@ public class ProfilePetFragment extends Fragment {
         return view;
     }
 
-    //TODO: Obtener data de parse y guardarlo en petController
-    private void getDataFromParse(){
-
-    }
-
-    //TODO: Mostrar data de parse
     private void setRecyclerViewDataFromParse() {
+        ParseObject user = ParseObject.createWithoutData("_User",UserController.getInstance().getUser().getUserCode());
 
-        petArrayList.add(new Pet( false,"perro","Manchas", "10"));
-        petArrayList.add(new Pet(true,"perro","Lumy", "9"));
-        petArrayList.add(new Pet(true,"gato","Princesa", "6"));
-        petArrayList.add(new Pet(false,"loro","Pepito", "15"));
-        petArrayList.add(new Pet(false,"perro","Boby","5"));
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pet");
+        query.whereEqualTo("user", user);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> scoreList, ParseException e) {
+                if (e == null) {
+                    Log.d("pet", "Retrieved " + scoreList.size() + " pets");
+                    for (int i = 0; i < scoreList.size(); i++) {
+                        Pet temporalPet = new Pet(false, scoreList.get(i).get("petType").toString(), scoreList.get(i).get("petName").toString()
+                                , scoreList.get(i).get("petAge").toString(), (ParseFile) scoreList.get(i).get("petImage"));
+                        Log.e("temporalPet: ", temporalPet.toString());
+                        petArrayList.add(temporalPet);
+                    }
+                    PetController.getInstance().setPetArray(petArrayList);
+                    mostrarPets();
 
-        PetController.getInstance().setPetArray(petArrayList);
-
-        mostrarPets();
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private void mostrarPets(){

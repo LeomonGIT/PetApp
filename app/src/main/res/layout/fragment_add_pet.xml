@@ -50,7 +50,7 @@
                 <EditText android:id="@+id/input_pet_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
+                    android:inputType="numberDecimal"
                     android:hint="Tipo Animal" />
             </android.support.design.widget.TextInputLayout>
 
@@ -63,7 +63,7 @@
                 <EditText android:id="@+id/input_pet_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
+                    android:inputType="numberDecimal"
                     android:hint="Edad"/>
             </android.support.design.widget.TextInputLayout>
 

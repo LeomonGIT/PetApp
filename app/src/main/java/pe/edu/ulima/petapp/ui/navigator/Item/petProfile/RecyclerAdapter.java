@@ -40,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         //setting data to view holder elements
         viewHolder.name.setText(friends.get(position).getPetName());
-        viewHolder.job.setText(friends.get(position).getPetAge());
+        viewHolder.job.setText(friends.get(position).getPetAge()+" años");
         viewHolder.type.setText(friends.get(position).getPetType());
         if (friends.get(position).isGender()) {
             viewHolder.imageView.setImageResource(R.mipmap.logo_white);
