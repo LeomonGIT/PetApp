@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         validateParse();
+        //goToMain();//borrarnesto +sin internet+
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -116,28 +117,31 @@ public class LoginActivity extends AppCompatActivity {
             return valid;
         }
 
-    private void validateParse(){
+    private void validateParse() {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        Log.e("validandoParse",email+" - "+password);
+        Log.e("validandoParse", email + " - " + password);
 
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
 
                 if (user != null) {
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(i);
-                    Log.e("userParse","name:"+user.get("name").toString()+" email:"+user.getUsername().toString()+ " iD:"+user.getObjectId().toString());
+
+                    Log.e("userParse", "name:" + user.get("name").toString() + " email:" + user.getUsername().toString() + " iD:" + user.getObjectId().toString());
                     UserController.getInstance().setUser(new User(user.get("name").toString(),
-                            user.getUsername().toString(),user.getObjectId().toString()));
-                    progressDialog.dismiss();
+                            user.getUsername().toString(), user.getObjectId().toString()));
+                    goToMain();
                 } else {
                     onLoginFailed();
                 }
             }
         });
 
-
-
+    }
+    private void goToMain(){
+        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(i);
+        progressDialog.dismiss();
+        _loginButton.setEnabled(true);
     }
 }

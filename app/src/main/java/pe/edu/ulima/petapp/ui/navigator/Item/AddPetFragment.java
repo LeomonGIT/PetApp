@@ -33,7 +33,9 @@ import java.io.ByteArrayOutputStream;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.PetController;
 import pe.edu.ulima.petapp.controller.UserController;
+import pe.edu.ulima.petapp.dao.Pet;
 
 
 public class AddPetFragment extends Fragment {
@@ -137,29 +139,34 @@ public class AddPetFragment extends Fragment {
     }
 
     private void registerParse(){
-        String name = _nameText.getText().toString();
-        String type = _typeText.getText().toString();
-        String age = _ageText.getText().toString();
+        final String name = _nameText.getText().toString();
+        final String type = _typeText.getText().toString();
+        final String age = _ageText.getText().toString();
+        ParseFile file=null;
+
         ParseObject pet = new ParseObject("Pet");
         pet.put("petName", name);
         pet.put("petType", type);
         pet.put("petAge", age);
         pet.put("user", ParseObject.createWithoutData("_User", UserController.getInstance().toString()));
-        if (conFoto){
-            Log.e("registrando","confoto=true");
+        if (conFoto) {
+            Log.e("registrando", "confoto=true");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitMap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] data = stream.toByteArray();
             //System.out.println(bytearray.toString());  //test case
-            ParseFile file = new ParseFile(name+".jpg",data);
+            file = new ParseFile(name + ".jpg", data);
             file.saveInBackground();
-            pet.put("petImage",file);
+            pet.put("petImage", file);
         }
+        final Pet peto = new Pet(true,type,name,age,file);
+
         pet.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
                     progressDialog.cancel();
+                    PetController.getInstance().getPetArray().add(peto);
 
                 } else {
                     _signupButton.setEnabled(true);

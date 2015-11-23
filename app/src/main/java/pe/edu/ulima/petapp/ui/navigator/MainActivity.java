@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
+import pe.edu.ulima.petapp.ui.navigator.Item.SettingFragment;
+import pe.edu.ulima.petapp.ui.navigator.Item.petProfile.ProfilePetFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        goToFragment(new ProfilePetFragment());
     }
 
     @Override
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            finish();
             return true;
         }
 
@@ -79,12 +84,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = null;
-        FragmentManager fm =getSupportFragmentManager();
+
         if (id == R.id.nav_add_pet) {
-            fragment = new AddPetFragment();
+            goToFragment(new AddPetFragment());
         } else if (id == R.id.nav_profile_pet) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new ProfilePetFragment());
         } else if (id == R.id.nav_send_sms) {
             Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_all_sms) {
@@ -94,15 +98,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_new_activity) {
             Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
         } else if(id == R.id.nav_setting) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new SettingFragment());
         }
 
-        if(fragment!=null)
-            fm.beginTransaction().replace(R.id.container,fragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void goToFragment(Fragment fragment){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment).commit();
     }
 }
