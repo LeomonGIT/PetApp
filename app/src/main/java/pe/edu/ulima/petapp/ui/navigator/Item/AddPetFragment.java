@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -44,10 +45,10 @@ public class AddPetFragment extends Fragment {
     View view;
     @InjectView(R.id.input_pet_name)
     EditText _nameText;
-    @InjectView(R.id.input_pet_type) EditText _typeText;
     @InjectView(R.id.input_pet_age) EditText _ageText;
     @InjectView(R.id.btn_pet_register) Button _signupButton;
     @InjectView(R.id.btn_pet_pic) Button _picButton;
+    @InjectView(R.id.sp_petType) Spinner _spPetType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,7 +112,7 @@ public class AddPetFragment extends Fragment {
         boolean valid = true;
 
         String name = _nameText.getText().toString();
-        String type = _typeText.getText().toString();
+        String type = String.valueOf(_spPetType.getSelectedItem());
         String age = _ageText.getText().toString();
 
         if (name.isEmpty()) {
@@ -119,13 +120,6 @@ public class AddPetFragment extends Fragment {
             valid = false;
         } else {
             _nameText.setError(null);
-        }
-
-        if (type.isEmpty()) {
-            _typeText.setError("No puede estar vacio");
-            valid = false;
-        } else {
-            _typeText.setError(null);
         }
 
         if (age.isEmpty()) {
@@ -140,7 +134,7 @@ public class AddPetFragment extends Fragment {
 
     private void registerParse(){
         final String name = _nameText.getText().toString();
-        final String type = _typeText.getText().toString();
+        final String type = String.valueOf(_spPetType.getSelectedItem());
         final String age = _ageText.getText().toString();
         ParseFile file=null;
 
@@ -159,18 +153,20 @@ public class AddPetFragment extends Fragment {
             file.saveInBackground();
             pet.put("petImage", file);
         }
-        final Pet peto = new Pet(true,type,name,age,file);
-
+        final Pet peto = new Pet(false,type,name,age,file);
+        Log.e("Peto To add",peto.toString());
         pet.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
                     progressDialog.cancel();
                     PetController.getInstance().getPetArray().add(peto);
+                    Toast.makeText(getActivity(), _nameText+" registrado con éxito", Toast.LENGTH_LONG).show();
 
                 } else {
                     _signupButton.setEnabled(true);
                     progressDialog.cancel();
+                    Toast.makeText(getActivity(), "No se logro registrar a "+ _nameText,Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -219,6 +215,7 @@ public class AddPetFragment extends Fragment {
                         .decodeFile(imgDecodableString);
                 Log.e("bitmap",bitMap.toString());
                 conFoto=true;
+
             } else {
                 Toast.makeText(getActivity(), "Imagen no seleccionada",Toast.LENGTH_LONG).show();
             }
