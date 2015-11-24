@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
+import pe.edu.ulima.petapp.ui.navigator.Item.SMSFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SettingFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.petProfile.ProfilePetFragment;
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile_pet) {
             goToFragment(new ProfilePetFragment());
         } else if (id == R.id.nav_send_sms) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new SMSFragment());
         } else if (id == R.id.nav_all_sms) {
             Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_activities) {
