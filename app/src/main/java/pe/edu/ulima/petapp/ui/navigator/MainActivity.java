@@ -17,6 +17,7 @@ import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SMSFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SettingFragment;
+import pe.edu.ulima.petapp.ui.navigator.Item.inbox.SMSInboxFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.petProfile.ProfilePetFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send_sms) {
             goToFragment(new SMSFragment());
         } else if (id == R.id.nav_all_sms) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new SMSInboxFragment());
         } else if (id == R.id.nav_activities) {
             Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_new_activity) {

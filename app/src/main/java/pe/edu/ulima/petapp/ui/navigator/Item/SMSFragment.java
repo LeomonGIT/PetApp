@@ -33,6 +33,7 @@ public class SMSFragment extends Fragment {
             public void onClick(View view) {
                 String number = _txtPhoneNo.getText().toString();
                 String sms = _txtMessageBody.getText().toString();
+                sms = "petApp "+sms;
 
                 try {
                     SmsManager smsManager = SmsManager.getDefault();
