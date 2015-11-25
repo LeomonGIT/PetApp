@@ -29,7 +29,8 @@ public class SMSInboxFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_inbox, container, false);
         // Inflate the layout for this fragment
-        smsArrayList = SmsController.getInstance().getSmsArrayList();
+        //smsArrayList = SmsController.getInstance().getSmsArrayList();
+        smsArrayList = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyle_view_inbox);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManagerHeader = new LinearLayoutManager(getActivity());
