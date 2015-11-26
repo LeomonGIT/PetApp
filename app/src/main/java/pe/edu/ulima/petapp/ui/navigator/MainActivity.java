@@ -11,18 +11,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.UserController;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SMSFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SettingFragment;
+import pe.edu.ulima.petapp.ui.navigator.Item.calendarView.CalendarFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.inbox.SMSInboxFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.petProfile.ProfilePetFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    @InjectView(R.id.txtHeaderName)
+    TextView _nameHeader;
+    @InjectView(R.id.txtHeaderEmail)
+    TextView _emailHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        ButterKnife.inject(this);
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +59,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        navHeaderUser();
+
         goToFragment(new ProfilePetFragment());
+    }
+
+    private void navHeaderUser(){
+        _nameHeader.setText(UserController.getInstance().getUser().getUserName());
+        _emailHeader.setText(UserController.getInstance().getUser().getUserEmail());
     }
 
     @Override
@@ -96,7 +113,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_all_sms) {
             goToFragment(new SMSInboxFragment());
         } else if (id == R.id.nav_activities) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new CalendarFragment() );
         } else if (id == R.id.nav_new_activity) {
             Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
         } else if(id == R.id.nav_setting) {
