@@ -80,7 +80,7 @@ public class ProfilePetFragment extends Fragment {
                     Log.d("pet", "Retrieved " + scoreList.size() + " pets");
                     for (int i = 0; i < scoreList.size(); i++) {
                         Pet temporalPet = new Pet(false, scoreList.get(i).get("petType").toString(), scoreList.get(i).get("petName").toString()
-                                , scoreList.get(i).get("petAge").toString(), (ParseFile) scoreList.get(i).get("petImage"));
+                                , scoreList.get(i).get("petAge").toString(), (ParseFile) scoreList.get(i).get("petImage"),scoreList.get(i).getObjectId().toString());
                         Log.e("temporalPet: ", temporalPet.toString());
                         petArrayList.add(temporalPet);
                     }

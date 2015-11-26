@@ -1,9 +1,13 @@
 package pe.edu.ulima.petapp.ui.navigator.Item.calendarView;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -18,26 +27,27 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.PetController;
 import pe.edu.ulima.petapp.dao.Actividad;
+import pe.edu.ulima.petapp.dao.Pet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class CalendarFragment extends Fragment {
 
     private boolean undo = false;
     private CaldroidFragment caldroidFragment;
     private CaldroidFragment dialogCaldroidFragment;
     private ArrayList<Actividad> actividadArrayList;
-
+    final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+
 
         // Setup caldroid fragment
         // **** If you want normal CaldroidFragment, use below line ****
@@ -64,20 +74,9 @@ public class CalendarFragment extends Fragment {
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
 
-            // Uncomment this to customize startDayOfWeek
-            // args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-            // CaldroidFragment.TUESDAY); // Tuesday
-
-            // Uncomment this line to use Caldroid in compact mode
-            // args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
-
-            // Uncomment this line to use dark theme
-//            args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
-
             caldroidFragment.setArguments(args);
         }
         getActivitiesParse();
-        setCustomResourceForDates();
 
         // Attach to the activity
         FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
@@ -92,11 +91,10 @@ public class CalendarFragment extends Fragment {
 
                 if(!actividadArrayList.isEmpty())
                     for (int i = 0; i < actividadArrayList.size(); i++) {
-                           if(actividadArrayList.get(i).getDate()==date)
+                        Log.e("para mostrar", formatter.format(actividadArrayList.get(i).getDate()).toString() + " - " + formatter.format(date).toString());
+                           if(formatter.format(actividadArrayList.get(i).getDate()).equals(formatter.format(date)))
                                showDialogActividad(actividadArrayList.get(i));
                     }
-                Toast.makeText(getActivity().getApplicationContext(), formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
 
             }
 
@@ -115,7 +113,6 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onCaldroidViewCreated() {
                 if (caldroidFragment.getLeftArrowButton() != null) {
-                    getActivitiesParse();
                 }
             }
 
@@ -127,6 +124,50 @@ public class CalendarFragment extends Fragment {
     }
 
     private void showDialogActividad(Actividad actividad){
+        Dialog dialog =null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View v = inflater.inflate(R.layout.actividad_dialog, null);
+        builder.setView(v);
+        TextView txtMascota = (TextView)v.findViewById(R.id.txtActividadMascota);
+        TextView txtFecha = (TextView)v.findViewById(R.id.txtActividadFecha);
+        TextView txtHora = (TextView)v.findViewById(R.id.txtActividadHora);
+        TextView txtTipo = (TextView)v.findViewById(R.id.txtActividadTipo);
+
+        for (Pet tempo:PetController.getInstance().getPetArray()) {
+            if(tempo.getPetId().equals(actividad.getPetID())){
+                txtMascota.setText(tempo.getPetName());
+                break;
+            }
+        }
+        txtFecha.setText(formatter.format(actividad.getDate()));
+        txtHora.setText(actividad.getTime());
+        txtTipo.setText(actividad.getTipo());
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar Evento", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cancelarEvento();
+                dialog.dismiss();
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+
+
+
+    }
+
+    private void cancelarEvento() {
+
+        Toast.makeText(getActivity(),"Actividad Cancelada",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -152,13 +193,35 @@ public class CalendarFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
         Date tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate,"10:00 am","cita mensual",1,null,null));
+        actividadArrayList.add(new Actividad(tempdate,"10:00 am","cita mensual",1,"gTEi8ywUz5",null,1));
         cal.add(Calendar.DATE, 4);
         tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate,"8:00 am","baño",1,null,null));
+        actividadArrayList.add(new Actividad(tempdate,"8:00 am","baño",1,null,null,2));
         cal.add(Calendar.DATE, 9);
         tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate,"6:00 pm","tratamiento",1,null,null));
+        actividadArrayList.add(new Actividad(tempdate, "6:00 pm", "tratamiento", 1, null, null, 3));
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Actividad");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> scoreList, ParseException e) {
+                if (e == null) {
+                    Log.d("Actividad", "Retrieved " + scoreList.size() + " activities");
+                    for (int i = 0; i < scoreList.size(); i++) {
+                        ParseObject temp = (ParseObject) scoreList.get(i).get("petID");
+                        Actividad temporalActividad = new Actividad(scoreList.get(i).getDate("fecha"), scoreList.get(i).get("hora").toString(), scoreList.get(i).get("tipo").toString()
+                                , Integer.valueOf(scoreList.get(i).get("alerta").toString()), temp.getObjectId().toString(), scoreList.get(i).getObjectId().toString(), 1);
+                        Log.e("temporalPet: ", temporalActividad.toString());
+                        actividadArrayList.add(temporalActividad);
+                    }
+                    setCustomResourceForDates();
+
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+
     }
 
     private void setCustomResourceForDates() {
@@ -171,7 +234,7 @@ public class CalendarFragment extends Fragment {
                         actividadArrayList.get(i).getDate());
             }
         }
-
+        caldroidFragment.refreshView();
 
         /*Calendar cal = Calendar.getInstance();
 

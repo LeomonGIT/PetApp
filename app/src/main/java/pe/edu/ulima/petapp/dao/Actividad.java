@@ -11,6 +11,18 @@ public class Actividad {
     private int alerta;
     private String petID;
     private String iD;
+    private int petPosition;
+
+    public Actividad(Date date, String time, String tipo, int alerta
+            , String petID, String iD, int petPosition) {
+        this.date = date;
+        this.time = time;
+        this.tipo = tipo;
+        this.alerta = alerta;
+        this.petID = petID;
+        this.iD = iD;
+        this.petPosition = petPosition;
+    }
 
     @Override
     public String toString() {
@@ -21,7 +33,16 @@ public class Actividad {
                 ", alerta=" + alerta +
                 ", petID='" + petID + '\'' +
                 ", iD='" + iD + '\'' +
+                ", petPosition=" + petPosition +
                 '}';
+    }
+
+    public int getPetPosition() {
+        return petPosition;
+    }
+
+    public void setPetPosition(int petPosition) {
+        this.petPosition = petPosition;
     }
 
     public Date getDate() {
@@ -72,14 +93,5 @@ public class Actividad {
         this.iD = iD;
     }
 
-    public Actividad(Date date, String time, String tipo, int alerta
-            , String petID, String iD) {
 
-        this.date = date;
-        this.time = time;
-        this.tipo = tipo;
-        this.alerta = alerta;
-        this.petID = petID;
-        this.iD = iD;
-    }
 }

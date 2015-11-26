@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_activities) {
             goToFragment(new CalendarFragment() );
         } else if (id == R.id.nav_new_activity) {
-            Toast.makeText(getBaseContext(),"Próximamente",Toast.LENGTH_SHORT).show();
+            goToFragment(new AddPetFragment());
         } else if(id == R.id.nav_setting) {
             goToFragment(new SettingFragment());
         }

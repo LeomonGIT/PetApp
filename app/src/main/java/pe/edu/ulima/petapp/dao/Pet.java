@@ -12,6 +12,42 @@ public class Pet {
     private String petName;
     private String petAge;
     private ParseFile petImage;
+    private String petId;
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "gender=" + gender +
+                ", petType='" + petType + '\'' +
+                ", petName='" + petName + '\'' +
+                ", petAge='" + petAge + '\'' +
+                ", petImage=" + petImage +
+                ", petId='" + petId + '\'' +
+                '}';
+    }
+
+    public void setPetImage(ParseFile petImage) {
+        this.petImage = petImage;
+    }
+
+    public String getPetId() {
+        return petId;
+    }
+
+    public void setPetId(String petId) {
+        this.petId = petId;
+    }
+
+    public Pet(boolean gender, String petType, String petName, String petAge, ParseFile petImage, String petId) {
+
+        this.gender = gender;
+        this.petType = petType;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.petImage = petImage;
+        this.petId = petId;
+    }
+
     public Pet(boolean gender, String petType, String petName, String petAge) {
         this.gender = gender;
         this.petType = petType;
@@ -26,15 +62,6 @@ public class Pet {
         this.petName = petName;
         this.petAge = petAge;
         this.petImage = petImage;
-    }
-    @Override
-    public String toString() {
-        return "Pet{" +
-                "gender=" + gender +
-                ", petName='" + petName + '\'' +
-                ", petAge='" + petAge + '\'' +
-                ", petImage=" + petImage +
-                '}';
     }
 
     public String getPetType() {
