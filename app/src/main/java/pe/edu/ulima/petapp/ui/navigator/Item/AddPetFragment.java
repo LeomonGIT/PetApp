@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 
@@ -72,7 +68,6 @@ public class AddPetFragment extends Fragment {
     }
 
     public void add() {
-        Log.d(TAG, "Signup");
 
         if (!validate()) {
             onAddFailed();
@@ -94,10 +89,6 @@ public class AddPetFragment extends Fragment {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        //onSignupSuccess();
-                        // onSignupFailed();
                     }
                 }, 3000);
     }
@@ -143,7 +134,6 @@ public class AddPetFragment extends Fragment {
         pet.put("petAge", age);
         pet.put("user", ParseObject.createWithoutData("_User", UserController.getInstance().getUser().getUserCode().toString()));
         if (conFoto) {
-            Log.e("registrando", "confoto=true");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitMap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] data = stream.toByteArray();
@@ -153,14 +143,13 @@ public class AddPetFragment extends Fragment {
             pet.put("petImage", file);
         }
         final Pet peto = new Pet(false,type,name,age,file);
-        Log.e("Peto To add",peto.toString());
         pet.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
                     progressDialog.cancel();
                     PetController.getInstance().getPetArray().add(peto);
-                    Toast.makeText(getActivity(), _nameText+" registrado con éxito", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), _nameText.getText().toString()+" registrado con éxito", Toast.LENGTH_LONG).show();
 
                 } else {
                     _signupButton.setEnabled(true);
@@ -176,11 +165,8 @@ public class AddPetFragment extends Fragment {
     Bitmap bitMap;
     String imgDecodableString;
     public void pickPhoto() {
-        //TODO: launch the photo picker
-        // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-// Start the Intent
         startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
 
     }
@@ -189,30 +175,24 @@ public class AddPetFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            // When an Image is picked
             if (requestCode == RESULT_LOAD_IMG && resultCode == Activity.RESULT_OK
                     && null != data) {
-                // Get the Image from data
 
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-                // Get the cursor
                 Cursor cursor = getActivity().getContentResolver().query(selectedImage,
                         filePathColumn, null, null, null);
-                // Move to first row
                 cursor.moveToFirst();
 
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
                 ImageView imgView = (ImageView) view.findViewById(R.id.imgView);
-                // Set the Image in ImageView after decoding the String
                 imgView.setImageBitmap(BitmapFactory
                         .decodeFile(imgDecodableString));
                 bitMap = BitmapFactory
                         .decodeFile(imgDecodableString);
-                Log.e("bitmap",bitMap.toString());
                 conFoto=true;
 
             } else {

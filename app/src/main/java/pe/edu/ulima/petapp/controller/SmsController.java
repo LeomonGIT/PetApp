@@ -26,4 +26,8 @@ public class SmsController {
     public void setSmsArrayList(ArrayList<Sms> smsArrayList) {
         this.smsArrayList = smsArrayList;
     }
+
+    public void clearSmsController(){
+        instance = new SmsController();
+    }
 }

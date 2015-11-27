@@ -3,7 +3,6 @@ package pe.edu.ulima.petapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.app.ProgressDialog;
 import android.widget.Button;
@@ -43,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void clickLogin(View v){
-        Log.e("clickLogin", "clickeado");
         login();
     }
 
@@ -52,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(i, REQUEST_SIGNUP);
     }
     public void login() {
-        Log.d(TAG, "Login");
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -68,14 +65,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
         validateParse();
-        //goToMain();//borrarnesto +sin internet+
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        //onLoginSuccess();
-                        // onLoginFailed();
                     }
                 }, 3000);
         }
@@ -120,14 +113,11 @@ public class LoginActivity extends AppCompatActivity {
     private void validateParse() {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        Log.e("validandoParse", email + " - " + password);
 
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
 
                 if (user != null) {
-
-                    Log.e("userParse", "name:" + user.get("name").toString() + " email:" + user.getUsername().toString() + " iD:" + user.getObjectId().toString());
                     UserController.getInstance().setUser(new User(user.get("name").toString(),
                             user.getUsername().toString(), user.getObjectId().toString()));
                     goToMain();
@@ -141,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
     private void goToMain(){
         Intent i = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(i);
-        progressDialog.dismiss();
-        _loginButton.setEnabled(true);
+        finish();
     }
 }

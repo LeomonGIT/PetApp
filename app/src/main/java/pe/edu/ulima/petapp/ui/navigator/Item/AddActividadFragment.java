@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,10 +136,6 @@ public class AddActividadFragment extends Fragment {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        //onSignupSuccess();
-                        // onSignupFailed();
                     }
                 }, 3000);
     }
@@ -150,13 +145,11 @@ public class AddActividadFragment extends Fragment {
 
         _btn_register.setEnabled(true);
     }
-    // add items into spinner dynamically
     public void addItemsOnSpinner2() {
 
         List<String> list = new ArrayList<String>();
 
         for (Pet pet: PetController.getInstance().getPetArray()) {
-            Log.e("petTem",pet.toString());
             list.add(pet.getPetName());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
@@ -190,10 +183,8 @@ public class AddActividadFragment extends Fragment {
         Date fecha = calendar.getTime();
         String hora = _hora.getText().toString();
         String tipo = String.valueOf(_sp_tipo.getSelectedItem());
-        Log.e("_sp_alerta",""+_sp_alerta.getSelectedItemPosition());
         int alerta=_sp_alerta.getSelectedItemPosition();
         String petID=PetController.getInstance().getPetArray().get(_sp_mascota.getSelectedItemPosition()).getPetId();
-        Log.e("Se registrará:","petID: "+petID+" - fecha:"+fecha.toString()+" - hora: "+hora);
         ParseObject pet = new ParseObject("Actividad");
         pet.put("fecha", fecha);
         pet.put("hora", hora);
@@ -205,7 +196,7 @@ public class AddActividadFragment extends Fragment {
             public void done(ParseException e) {
                 if (e == null){
                     progressDialog.cancel();
-                Toast.makeText(getActivity(), "Evento registrado con éxito", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Actividad registrado con éxito", Toast.LENGTH_LONG).show();
                 }else{
                     _btn_register.setEnabled(true);
                     progressDialog.cancel();

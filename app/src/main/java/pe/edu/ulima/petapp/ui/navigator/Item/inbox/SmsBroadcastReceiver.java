@@ -27,7 +27,6 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             }
             Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
 
-            //update list with message
         }
     }
 }

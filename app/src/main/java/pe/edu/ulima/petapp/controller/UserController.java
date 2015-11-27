@@ -24,4 +24,8 @@ public class UserController {
     public UserController() {
         user = new User();
     }
+
+    public void clearUserController(){
+        instance = new UserController();
+    }
 }

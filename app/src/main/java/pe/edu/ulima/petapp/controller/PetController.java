@@ -28,4 +28,8 @@ public class PetController {
     public void setPetArray(ArrayList<Pet> petArray) {
         this.petArray = petArray;
     }
+
+    public void clearPetController(){
+        instance = new PetController();
+    }
 }

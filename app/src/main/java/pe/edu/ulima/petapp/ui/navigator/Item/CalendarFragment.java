@@ -1,5 +1,4 @@
-package pe.edu.ulima.petapp.ui.navigator.Item.calendarView;
-
+package pe.edu.ulima.petapp.ui.navigator.Item;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,17 +6,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -31,15 +28,14 @@ import java.util.List;
 
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.controller.PetController;
+import pe.edu.ulima.petapp.controller.UserController;
 import pe.edu.ulima.petapp.dao.Actividad;
 import pe.edu.ulima.petapp.dao.Pet;
 
 
 public class CalendarFragment extends Fragment {
 
-    private boolean undo = false;
     private CaldroidFragment caldroidFragment;
-    private CaldroidFragment dialogCaldroidFragment;
     private ArrayList<Actividad> actividadArrayList;
     final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
     @Override
@@ -48,24 +44,13 @@ public class CalendarFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-
-        // Setup caldroid fragment
-        // **** If you want normal CaldroidFragment, use below line ****
         caldroidFragment = new CaldroidFragment();
         actividadArrayList = new ArrayList<>();
-        // //////////////////////////////////////////////////////////////////////
-        // **** This is to show customized fragment. If you want customized
-        // version, uncomment below line ****
-//		 caldroidFragment = new CaldroidSampleCustomFragment();
-
-        // Setup arguments
-
-        // If Activity is created after rotation
         if (savedInstanceState != null) {
             caldroidFragment.restoreStatesFromKey(savedInstanceState,
                     "CALDROID_SAVED_STATE");
         }
-        // If activity is created from fresh
+
         else {
             Bundle args = new Bundle();
             Calendar cal = Calendar.getInstance();
@@ -78,24 +63,18 @@ public class CalendarFragment extends Fragment {
         }
         getActivitiesParse();
 
-        // Attach to the activity
         FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendar1, caldroidFragment);
         t.commit();
 
-        // Setup listener
         final CaldroidListener listener = new CaldroidListener() {
 
             @Override
             public void onSelectDate(Date date, View view) {
-
                 if(!actividadArrayList.isEmpty())
-                    for (int i = 0; i < actividadArrayList.size(); i++) {
-                        Log.e("para mostrar", formatter.format(actividadArrayList.get(i).getDate()).toString() + " - " + formatter.format(date).toString());
-                           if(formatter.format(actividadArrayList.get(i).getDate()).equals(formatter.format(date)))
-                               showDialogActividad(actividadArrayList.get(i));
-                    }
-
+                    for (int i = 0; i < actividadArrayList.size(); i++)
+                        if(formatter.format(actividadArrayList.get(i).getDate()).equals(formatter.format(date)))
+                               showDialogActividad(actividadArrayList.get(i),i);
             }
 
             @Override
@@ -118,17 +97,17 @@ public class CalendarFragment extends Fragment {
 
         };
 
-        // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
         return view;
     }
 
-    private void showDialogActividad(Actividad actividad){
+    private void showDialogActividad(Actividad actividad, final int position){
         Dialog dialog =null;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.actividad_dialog, null);
         builder.setView(v);
+        final String id = actividad.getiD();
         TextView txtMascota = (TextView)v.findViewById(R.id.txtActividadMascota);
         TextView txtFecha = (TextView)v.findViewById(R.id.txtActividadFecha);
         TextView txtHora = (TextView)v.findViewById(R.id.txtActividadHora);
@@ -151,29 +130,34 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        builder.setNegativeButton("Cancelar Evento", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar Actividad", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cancelarEvento();
+                cancelarEvento(id,position);
                 dialog.dismiss();
             }
         });
         dialog = builder.create();
         dialog.show();
-
-
-
     }
 
-    private void cancelarEvento() {
+    private void cancelarEvento(String id, final int position) {
 
-        Toast.makeText(getActivity(),"Actividad Cancelada",Toast.LENGTH_SHORT).show();
+        ParseObject delete = ParseObject.createWithoutData("Actividad",id);
+        delete.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e==null) {
+                    actividadArrayList.remove(position);
+                    setCustomResourceForDates();
+                    Toast.makeText(getActivity(), "Actividad Cancelada", Toast.LENGTH_SHORT).show();
 
+                }else
+                    Toast.makeText(getActivity(), "No se logró cancelar la actividad", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    /**
-     * Save current states of the Caldroid here
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // TODO Auto-generated method stub
@@ -182,34 +166,32 @@ public class CalendarFragment extends Fragment {
         if (caldroidFragment != null) {
             caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
         }
-
-        if (dialogCaldroidFragment != null) {
-            dialogCaldroidFragment.saveStatesToKey(outState,
-                    "DIALOG_CALDROID_SAVED_STATE");
-        }
     }
 
     private void getActivitiesParse(){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Actividad");
-        query.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("_User");
+        innerQuery.whereEqualTo("objectId", UserController.getInstance().getUser().getUserCode());
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pet");
+        query.whereMatchesQuery("user", innerQuery);
+        ParseQuery<ParseObject> actividadQuery = ParseQuery.getQuery("Actividad");
+        actividadQuery.whereMatchesQuery("petID", query);
+        actividadQuery.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {
-                if (e == null) {
-                    Log.d("Actividad", "Retrieved " + scoreList.size() + " activities");
-                    for (int i = 0; i < scoreList.size(); i++) {
-                        ParseObject temp = (ParseObject) scoreList.get(i).get("petID");
-                        Actividad temporalActividad = new Actividad(scoreList.get(i).getDate("fecha"), scoreList.get(i).get("hora").toString(), scoreList.get(i).get("tipo").toString()
-                                , Integer.valueOf(scoreList.get(i).get("alerta").toString()), temp.getObjectId().toString(), scoreList.get(i).getObjectId().toString(), 1);
-                        Log.e("temporalPet: ", temporalActividad.toString());
-                        actividadArrayList.add(temporalActividad);
-                    }
-                    setCustomResourceForDates();
-
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
+                if(e==null){
+                for (int i = 0; i < scoreList.size(); i++) {
+                    ParseObject temp = (ParseObject) scoreList.get(i).get("petID");
+                    Actividad temporalActividad = new Actividad(scoreList.get(i).getDate("fecha"),
+                            scoreList.get(i).get("hora").toString(), scoreList.get(i).get("tipo").toString()
+                            , Integer.valueOf(scoreList.get(i).get("alerta").toString()), temp.getObjectId().toString(),
+                            scoreList.get(i).getObjectId().toString(), 1);
+                    actividadArrayList.add(temporalActividad);
                 }
-            }
-        });
+                setCustomResourceForDates();
 
+            } else {
+                e.printStackTrace();
+            }
+        }});
 
     }
 
@@ -224,25 +206,5 @@ public class CalendarFragment extends Fragment {
             }
         }
         caldroidFragment.refreshView();
-
-        /*Calendar cal = Calendar.getInstance();
-
-        // Min date is last 7 days
-        cal.add(Calendar.DATE, -7);
-        Date blueDate = cal.getTime();
-
-        // Max date is next 7 days
-        cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 7);
-        Date greenDate = cal.getTime();
-
-        if (caldroidFragment != null) {
-            caldroidFragment.setBackgroundResourceForDate(R.color.blue,
-                    blueDate);
-            caldroidFragment.setBackgroundResourceForDate(R.color.green,
-                    greenDate);
-            caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-            caldroidFragment.setTextColorForDate(R.color.white, greenDate);
-        }*/
     }
 }
