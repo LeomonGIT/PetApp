@@ -112,7 +112,6 @@ public class AddPetFragment extends Fragment {
         boolean valid = true;
 
         String name = _nameText.getText().toString();
-        String type = String.valueOf(_spPetType.getSelectedItem());
         String age = _ageText.getText().toString();
 
         if (name.isEmpty()) {

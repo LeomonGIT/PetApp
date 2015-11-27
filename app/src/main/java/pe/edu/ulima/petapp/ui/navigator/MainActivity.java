@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.controller.UserController;
+import pe.edu.ulima.petapp.ui.navigator.Item.AddActividadFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SMSFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.SettingFragment;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_activities) {
             goToFragment(new CalendarFragment() );
         } else if (id == R.id.nav_new_activity) {
-            goToFragment(new AddPetFragment());
+            goToFragment(new AddActividadFragment());
         } else if(id == R.id.nav_setting) {
             goToFragment(new SettingFragment());
         }

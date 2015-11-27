@@ -41,4 +41,8 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:background">#90CAF9</item>
     </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/green</item>
+    </style>
 </resources>
