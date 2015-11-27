@@ -42,6 +42,7 @@ public class SMSInboxFragment extends Fragment {
             String body= cur.getString(cur.getColumnIndex("body"));
             String number = cur.getString(2);
             if(body.startsWith("petApp")){
+                body=body.substring(0,7);
                 Sms temporalSmas= new Sms(body,number,""+0,"");
                 smsArrayList.add(temporalSmas);
             }
