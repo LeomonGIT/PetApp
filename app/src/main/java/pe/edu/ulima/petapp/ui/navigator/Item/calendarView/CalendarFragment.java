@@ -190,17 +190,6 @@ public class CalendarFragment extends Fragment {
     }
 
     private void getActivitiesParse(){
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -7);
-        Date tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate,"10:00 am","cita mensual",1,"gTEi8ywUz5",null,1));
-        cal.add(Calendar.DATE, 4);
-        tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate,"8:00 am","baño",1,null,null,2));
-        cal.add(Calendar.DATE, 9);
-        tempdate = cal.getTime();
-        actividadArrayList.add(new Actividad(tempdate, "6:00 pm", "tratamiento", 1, null, null, 3));
-
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Actividad");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {

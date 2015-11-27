@@ -23,6 +23,7 @@
         <item>Otro</item>
     </string-array>
     <string name="actividadAlerta_prompt">Alerta</string>
+    <string name="actividadMascota_prompt">Seleccionar Mascota</string>
     <string-array name="alerta_array">
         <item>Sin alerta</item>
         <item>1 dia</item>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -18,16 +19,23 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.PetController;
+import pe.edu.ulima.petapp.dao.Pet;
 
 public class AddActividadFragment extends Fragment {
 
@@ -45,6 +53,8 @@ public class AddActividadFragment extends Fragment {
     ImageButton _btn_hora;
     @InjectView(R.id.btn_actividad_register)
     Button _btn_register;
+    @InjectView(R.id.sp_actividadPet)
+    Spinner _sp_mascota;
 
     private static final String TIME_PATTERN = "HH:mm";
     private Calendar calendar;
@@ -57,7 +67,7 @@ public class AddActividadFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_actividad, container, false);
         ButterKnife.inject(this, view);
-
+        addItemsOnSpinner2();
         calendar = Calendar.getInstance();
         dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         timeFormat = new SimpleDateFormat(TIME_PATTERN, Locale.getDefault());
@@ -140,7 +150,20 @@ public class AddActividadFragment extends Fragment {
 
         _btn_register.setEnabled(true);
     }
+    // add items into spinner dynamically
+    public void addItemsOnSpinner2() {
 
+        List<String> list = new ArrayList<String>();
+
+        for (Pet pet: PetController.getInstance().getPetArray()) {
+            Log.e("petTem",pet.toString());
+            list.add(pet.getPetName());
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _sp_mascota.setAdapter(dataAdapter);
+    }
     public boolean validate() {
         boolean valid = true;
 
@@ -164,18 +187,31 @@ public class AddActividadFragment extends Fragment {
         return valid;
     }
     private void addActividadToParse(){
-        String fecha= _fecha.getText().toString();
+        Date fecha = calendar.getTime();
         String hora = _hora.getText().toString();
         String tipo = String.valueOf(_sp_tipo.getSelectedItem());
-
+        Log.e("_sp_alerta",""+_sp_alerta.getSelectedItemPosition());
+        int alerta=_sp_alerta.getSelectedItemPosition();
+        String petID=PetController.getInstance().getPetArray().get(_sp_mascota.getSelectedItemPosition()).getPetId();
+        Log.e("Se registrará:","petID: "+petID+" - fecha:"+fecha.toString()+" - hora: "+hora);
         ParseObject pet = new ParseObject("Actividad");
         pet.put("fecha", fecha);
         pet.put("hora", hora);
         pet.put("tipo", tipo);
-        pet.put("alerta", hora);
-        pet.put("petID", hora);
-        //pet.put("tipo", tipo);
-
-        progressDialog.cancel();
+        pet.put("alerta", alerta);
+        pet.put("petID", ParseObject.createWithoutData("Pet", petID));
+        pet.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null){
+                    progressDialog.cancel();
+                Toast.makeText(getActivity(), "Evento registrado con éxito", Toast.LENGTH_LONG).show();
+                }else{
+                    _btn_register.setEnabled(true);
+                    progressDialog.cancel();
+                    Toast.makeText(getActivity(), "No le logró registrar", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
