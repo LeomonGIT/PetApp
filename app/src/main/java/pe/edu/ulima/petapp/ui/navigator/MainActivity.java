@@ -14,6 +14,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import pe.edu.ulima.petapp.R;
+import pe.edu.ulima.petapp.controller.BannerController;
 import pe.edu.ulima.petapp.controller.UserController;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddActividadFragment;
 import pe.edu.ulima.petapp.ui.navigator.Item.AddPetFragment;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     TextView _nameHeader;
     @InjectView(R.id.txtHeaderEmail)
     TextView _emailHeader;
+    @InjectView(R.id.txtBanner)
+    TextView _banner_veterinaria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.inject(this);
-
+        BannerController.getInstance().cargarBanner();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         navHeaderUser();
-
+        mostrarBanner();
         goToFragment(new ProfilePetFragment());
     }
 
@@ -100,5 +103,9 @@ public class MainActivity extends AppCompatActivity
     private void goToFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment).commit();
+    }
+
+    private void mostrarBanner(){
+        BannerController.getInstance().bannerShow(_banner_veterinaria);
     }
 }
