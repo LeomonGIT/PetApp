@@ -196,7 +196,7 @@ public class AddActividadFragment extends Fragment {
             public void done(ParseException e) {
                 if (e == null){
                     progressDialog.cancel();
-                Toast.makeText(getActivity(), "Actividad registrado con éxito", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Actividad registrado con éxito", Toast.LENGTH_SHORT).show();
                 }else{
                     _btn_register.setEnabled(true);
                     progressDialog.cancel();

@@ -22,8 +22,9 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 String smsBody = smsMessage.getMessageBody().toString();
                 String address = smsMessage.getOriginatingAddress();
 
-                smsMessageStr += "SMS From: " + address + "\n";
-                smsMessageStr += smsBody + "\n";
+                /*smsMessageStr += "SMS de: " + address + "\n";
+                smsMessageStr += smsBody + "\n";*/
+                smsMessageStr = "Nuevo mensaje de PetsLoverS!";
             }
             Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
 

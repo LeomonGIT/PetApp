@@ -8,7 +8,7 @@
         <item android:id="@+id/nav_profile_pet" android:icon="@android:drawable/ic_menu_myplaces"
             android:title="Perfil Mascota(s)" />
         <item android:id="@+id/nav_send_sms" android:icon="@android:drawable/ic_menu_send"
-            android:title="Enviar SMS" />
+            android:title="Ubicar Mascotas" />
         <item android:id="@+id/nav_all_sms" android:icon="@drawable/ic_email"
             android:title="Buzón Entrada" />
         <item android:id="@+id/nav_setting" android:icon="@android:drawable/ic_menu_manage"

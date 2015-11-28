@@ -2,6 +2,7 @@ package pe.edu.ulima.petapp.ui.navigator.Item;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ import pe.edu.ulima.petapp.dao.Pet;
 
 public class CalendarFragment extends Fragment {
 
+    ProgressDialog progressDialog;
     private CaldroidFragment caldroidFragment;
     private ArrayList<Actividad> actividadArrayList;
     final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
@@ -75,7 +77,7 @@ public class CalendarFragment extends Fragment {
                 if(!actividadArrayList.isEmpty())
                     for (int i = 0; i < actividadArrayList.size(); i++)
                         if(formatter.format(actividadArrayList.get(i).getDate()).equals(formatter.format(date)))
-                               showDialogActividad(actividadArrayList.get(i),i,date);
+                               showDialogActividad(actividadArrayList.get(i),i);
             }
 
             @Override
@@ -102,7 +104,7 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
-    private void showDialogActividad(Actividad actividad, final int position, final Date date){
+    private void showDialogActividad(Actividad actividad, int position){
         Dialog dialog =null;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -130,11 +132,12 @@ public class CalendarFragment extends Fragment {
                 dialog.dismiss();
             }
         });
-
+        final int pos = position;
         builder.setNegativeButton("Cancelar Actividad", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cancelarEvento(id,position,date);
+                cancelarEvento(id, pos);
+                openDialog();
                 dialog.dismiss();
             }
         });
@@ -142,17 +145,19 @@ public class CalendarFragment extends Fragment {
         dialog.show();
     }
 
-    private void cancelarEvento(String id, final int position, final Date date) {
+    private void cancelarEvento(String id, int position) {
 
+        final int pos = position;
         ParseObject delete = ParseObject.createWithoutData("Actividad",id);
         delete.deleteInBackground(new DeleteCallback() {
             @Override
             public void done(ParseException e) {
                 if(e==null) {
-                    Log.e("position to remove",""+position);
-                    actividadArrayList.remove(position);
-                    caldroidFragment.clearBackgroundResourceForDate(date);
+                    caldroidFragment.setBackgroundResourceForDate(R.color.white,actividadArrayList.get(pos).getDate());
+                    caldroidFragment.setTextColorForDate(R.color.black, actividadArrayList.get(pos).getDate());
+                    actividadArrayList.remove(pos);
                     caldroidFragment.refreshView();
+                    progressDialog.cancel();
                     Toast.makeText(getActivity(), "Actividad Cancelada", Toast.LENGTH_SHORT).show();
 
                 }else
@@ -161,6 +166,19 @@ public class CalendarFragment extends Fragment {
         });
     }
 
+    private void openDialog(){
+        progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Cancelando Actividad...");
+        progressDialog.show();
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                    }
+                }, 3000);
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // TODO Auto-generated method stub
