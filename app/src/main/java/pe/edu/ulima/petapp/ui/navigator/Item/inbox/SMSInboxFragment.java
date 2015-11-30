@@ -45,7 +45,7 @@ public class SMSInboxFragment extends Fragment {
                 body=body.substring(7,body.length());
                 Sms temporalSmas= new Sms(body,number,""+0,"");
                 smsArrayList.add(temporalSmas);
-            }else if(body.startsWith("last:")){
+            }else if(body.contains("lat:") && body.contains("long:")){
                 Sms temporalSmas= new Sms(body,number,""+0,"");
                 smsArrayList.add(temporalSmas);
             }

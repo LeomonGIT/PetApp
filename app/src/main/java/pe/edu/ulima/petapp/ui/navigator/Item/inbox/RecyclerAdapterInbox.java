@@ -1,16 +1,19 @@
 package pe.edu.ulima.petapp.ui.navigator.Item.inbox;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
 
 import pe.edu.ulima.petapp.R;
 import pe.edu.ulima.petapp.dao.Sms;
+import pe.edu.ulima.petapp.ui.navigator.Item.inbox.map.MapsActivity;
 
 
 public class RecyclerAdapterInbox extends RecyclerView.Adapter<RecyclerAdapterInbox.ViewHolder>{
@@ -39,6 +42,13 @@ public class RecyclerAdapterInbox extends RecyclerView.Adapter<RecyclerAdapterIn
         viewHolder.number.setText(sms.get(position).getNumber());
         viewHolder.body.setText(sms.get(position).getBody());
         viewHolder.time.setText(sms.get(position).getTime());
+        viewHolder.map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(activity, MapsActivity.class);
+                activity.startActivity(i);
+            }
+        });
 
     }
 
@@ -51,10 +61,12 @@ public class RecyclerAdapterInbox extends RecyclerView.Adapter<RecyclerAdapterIn
         private TextView body;
         private TextView number;
         private TextView time;
+        private ImageButton map;
         private View container;
 
         public ViewHolder(View view) {
             super(view);
+            map = (ImageButton) view.findViewById(R.id.btn_map);
             body = (TextView) view.findViewById(R.id.txtInboxBody);
             number = (TextView) view.findViewById(R.id.txtInboxNumber);
             time = (TextView) view.findViewById(R.id.txtInboxTime);

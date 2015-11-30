@@ -1,12 +1,32 @@
 package pe.edu.ulima.petapp.dao;
 
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Sms {
 
     private String body;
     private String number;
     private String id;
     private String time;
+    private LatLng latLng;
+
+    public Sms(String body, String number, String id, String time, LatLng latLng) {
+        this.body = body;
+        this.number = number;
+        this.id = id;
+        this.time = time;
+        this.latLng = latLng;
+    }
+
+    public LatLng getLatLng() {
+
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
 
     @Override
     public String toString() {

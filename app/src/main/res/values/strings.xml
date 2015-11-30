@@ -30,5 +30,6 @@
         <item>2 dias</item>
         <item>3 dias</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
