@@ -40,7 +40,7 @@ public class SMSFragment extends Fragment {
                     return;
                 String number = _txtPhoneNo.getText().toString();
                 String sms = _txtMessageBody.getText().toString();
-                sms = "petApp " + sms;
+                //sms = "petApp " + sms;
                 _btnSendSMS.setEnabled(false);
                 try {
                     SmsManager smsManager = SmsManager.getDefault();

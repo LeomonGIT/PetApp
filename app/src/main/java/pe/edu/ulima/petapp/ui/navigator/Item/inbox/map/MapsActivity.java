@@ -4,6 +4,7 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +19,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private boolean ubicarPosition=true;
-
+    LatLng ubicacionGPS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,18 +30,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        iniciarPosition();
+        mMap.setMyLocationEnabled(true);
+        if(getIntent().getDoubleExtra("longitud",0) != 0) {
+            double longitud = getIntent().getDoubleExtra("longitud", 0);
+            double latitud = getIntent().getDoubleExtra("latitud", 0);
+            ubicacionGPS = new LatLng(latitud, longitud);
+            mMap.addMarker(new MarkerOptions().position(ubicacionGPS).title("Mascota"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionGPS,13));
+        }else
+            iniciarPosition();
     }
     private void iniciarPosition() {
         mMap.setMyLocationEnabled(true);
@@ -50,9 +54,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 if (ubicarPosition)
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 13));
-                ubicarPosition=false;
+                ubicarPosition = false;
             }
         });
+        Toast.makeText(MapsActivity.this,"Sin rastro de mascota",Toast.LENGTH_SHORT).show();
     }
 
     @Override

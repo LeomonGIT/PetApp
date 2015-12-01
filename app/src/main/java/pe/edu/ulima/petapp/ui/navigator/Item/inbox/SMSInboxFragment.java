@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -46,7 +49,14 @@ public class SMSInboxFragment extends Fragment {
                 Sms temporalSmas= new Sms(body,number,""+0,"");
                 smsArrayList.add(temporalSmas);
             }else if(body.contains("lat:") && body.contains("long:")){
-                Sms temporalSmas= new Sms(body,number,""+0,"");
+                String[] parts = body.split("\\:");
+                String latitud = parts[2].substring(0, 8);
+                String longitud = parts[3].substring(0, 8);
+                double lat = Double.parseDouble(latitud);
+                double longi = Double.parseDouble(longitud);
+                LatLng gps = new LatLng(lat,longi);
+                body="Fecha:"+parts[5]+":"+parts[6];
+                Sms temporalSmas= new Sms(body,number,""+0,"",gps);
                 smsArrayList.add(temporalSmas);
             }
         }

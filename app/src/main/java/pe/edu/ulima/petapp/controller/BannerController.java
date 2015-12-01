@@ -21,7 +21,7 @@ public class BannerController {
     public void cargarBanner(){
         banner = new ArrayList<>();
         banner.add("Agrovetmarket");
-        banner.add("Healthy Pets Vet");
+        banner.add("Healthy Pets");
         banner.add("\"Groom Room\"");
         banner.add("Dicopet");
     }

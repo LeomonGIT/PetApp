@@ -39,6 +39,7 @@ public class RecyclerAdapterInbox extends RecyclerView.Adapter<RecyclerAdapterIn
     @Override
     public void onBindViewHolder(RecyclerAdapterInbox.ViewHolder viewHolder, int position) {
 
+        final Sms smss = sms.get(position);
         viewHolder.number.setText(sms.get(position).getNumber());
         viewHolder.body.setText(sms.get(position).getBody());
         viewHolder.time.setText(sms.get(position).getTime());
@@ -46,6 +47,10 @@ public class RecyclerAdapterInbox extends RecyclerView.Adapter<RecyclerAdapterIn
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(activity, MapsActivity.class);
+                if(smss.getLatLng()!=null) {
+                    i.putExtra("longitud", smss.getLatLng().longitude);
+                    i.putExtra("latitud", smss.getLatLng().latitude);
+                }
                 activity.startActivity(i);
             }
         });
