@@ -13,7 +13,7 @@
 
     <ImageView android:layout_width="234dp"
         android:layout_height="86dp"
-        android:src="@drawable/logo_white"
+        android:src="@drawable/icono_white"
         android:id="@+id/imageView"
         android:layout_weight="1.68" />
 

@@ -49,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, RegisterAccountActivity.class);
         startActivityForResult(i, REQUEST_SIGNUP);
     }
+    public void clickToRegisterAccountButton(View v) {
+        Intent i = new Intent(this, RegisterAccountActivity.class);
+        startActivityForResult(i, REQUEST_SIGNUP);
+    }
     public void login() {
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);

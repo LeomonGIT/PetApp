@@ -1,7 +1,6 @@
 package pe.edu.ulima.petapp.ui.navigator.Item.petProfile;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,18 +41,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         viewHolder.job.setText(friends.get(position).getPetAge()+" años");
         viewHolder.type.setText(friends.get(position).getPetType());
 
-        viewHolder.imageView.setImageResource(R.mipmap.logo);
+        //viewHolder.imageView.setImageResource(R.mipmap.logo);
     }
 
-    private void setDataToView(TextView name, TextView job, ImageView genderIcon, int position) {
-        name.setText(friends.get(position).getPetName());
-        job.setText(friends.get(position).getPetAge());
-        if (friends.get(position).isGender()) {
-            genderIcon.setImageResource(R.mipmap.logo_white);
-        } else {
-            genderIcon.setImageResource(R.mipmap.logo);
-        }
-    }
 
     @Override
     public int getItemCount() {

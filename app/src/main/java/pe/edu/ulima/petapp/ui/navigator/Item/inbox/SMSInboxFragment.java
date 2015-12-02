@@ -50,11 +50,21 @@ public class SMSInboxFragment extends Fragment {
                 smsArrayList.add(temporalSmas);
             }else if(body.contains("lat:") && body.contains("long:")){
                 String[] parts = body.split("\\:");
-                String latitud = parts[2].substring(0, 8);
-                String longitud = parts[3].substring(0, 8);
-                double lat = Double.parseDouble(latitud);
-                double longi = Double.parseDouble(longitud);
-                LatLng gps = new LatLng(lat,longi);
+                //String latitud = parts[2].substring(0, 8);
+                String[] partLat = parts[2].split("\\ ");
+                String latitud = partLat[0];
+                String[] partLong = parts[3].split("\\ ");
+                String longitud = partLong[0];
+                for (int i = 0; i <partLong.length ; i++) {
+                    Log.e("partLong",partLong[i] + "  "+i);
+                }
+                LatLng gps=null;
+                if(latitud.length()>5 && longitud.length()>5){
+                    double lat = Double.parseDouble(latitud);
+                    double longi = Double.parseDouble(longitud);
+                    gps = new LatLng(lat,longi);
+                }
+
                 body="Fecha:"+parts[5]+":"+parts[6];
                 Sms temporalSmas= new Sms(body,number,""+0,"",gps);
                 smsArrayList.add(temporalSmas);
